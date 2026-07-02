@@ -8,18 +8,18 @@ import CartPage from "./pages/CartPage.tsx";
 import Navigation from "./components/Navigation.tsx";
 
 
-import {Box, Grid} from "@mui/material";
+import {Box, CircularProgress, Grid, Stack, Typography} from "@mui/material";
+import useCart from "./hooks/useCart.ts";
+import type {Product} from "./models/product.ts";
 
 
 function App() {
     const [products, setProduct] = useState<Product[]>([])
-    const [cart, setCart] = useState<Map<number, Object>>(loadCart())
+    const [cart, productToCart,viderCart] = useCart()
 
     function loadData() {
-        console.log("loading data")
         let data = axios.get('https://fakestoreapi.com/products/').then((response) => {
                 let prods = []
-
                 for (let dataProduct of response.data) {
                     prods.push(dataProduct)
                 }
@@ -28,57 +28,25 @@ function App() {
         ).catch((e) => {
             console.log(e)
         })
-
     }
 
     useEffect(() => {
         loadData()
     }, [])
 
-    // // importer des produir
-
-    // construire un carts
-    const productToCart = (product: Product, quantity: number) => {
-        let temp_cart = new Map(cart)
-        console.log("product", product)
-        console.log("quantity", quantity)
-
-        let order = cart.get(product.id)
-        if (order) {
-            if (order.quantity + quantity > 0) {
-                order.quantity = order.quantity + quantity
-                temp_cart.set(product.id, order)
-            } else
-                temp_cart.delete(product.id)
-        } else {
-            temp_cart.set(product.id, {product: product, quantity: quantity})
-        }
-        setCart(temp_cart)
-    }
-    const viderCart = () => {
-        setCart(new Map())
-    }
-
-    function loadCart(): Map<number, Object> {
-        const cache = localStorage.getItem("cart")
-
-        if (cache !== null) {
-            return new Map(JSON.parse(cache))
-        }
-        return new Map()
-    }
-
-    useEffect(() => {
-        const cache = localStorage.setItem("cart", JSON.stringify(Array.from(cart)))
-    }, [cart]);
-
     if (products.length === 0) {
-        return <h1>loading ... </h1>
+        return  <Box className="loading">
+            <Stack spacing={2} sx={{alignItems: "center"}}>
+                <CircularProgress/>
+                <Typography variant="h6" color="text.secondary">
+                    Chargement de la boutique...
+                </Typography>
+            </Stack>
+        </Box>
     }
     return (
         <>
             <Box className="App">
-
                 <BrowserRouter>
                     <Navigation/>
                     <Grid container spacing={2}>
@@ -98,7 +66,6 @@ function App() {
                                element={<ShopPage products={products} cart={cart} toCart={productToCart}/>}/>
                         <Route path={CartPage.PATH}
                                element={<CartPage products={products} cart={cart} toCart={productToCart}/>}/>
-
                     </Routes>
 
                     <Outlet/>
