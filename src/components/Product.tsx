@@ -16,7 +16,7 @@ export default function Product({product,toChart}: ProductProps) {
                 <CardMedia className={"product_image"} component="img" src={product.image} style={{width:'200px'}}></CardMedia>
                 <CardContent>
 
-                    €{product.price}
+                    {product.price} €
                 </CardContent>
                 <CardActions>
                     <Button size="small" variant="contained" onClick={()=>toChart(product,-1)}>-</Button>

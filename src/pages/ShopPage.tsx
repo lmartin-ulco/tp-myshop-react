@@ -1,6 +1,7 @@
 import {useOutletContext} from "react-router-dom";
 import {Grid} from "@mui/material";
 import ProductCard from "../components/ProductCard.tsx";
+import type {Product} from "../models/product.ts";
 
 interface ShopPageProps {
     products: Product[];

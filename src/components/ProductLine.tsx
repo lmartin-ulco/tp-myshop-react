@@ -1,17 +1,10 @@
 import {
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    CardMedia, Chip, Grid,
-    IconButton,
+    Box,  Grid,
     Paper,
     Stack, Typography
 } from "@mui/material";
-import {Minus, Plus, Trash} from "lucide-react";
-import ProductQuantity from "../../src-temp/components/ProductQuantity.tsx";
+import ProductQuantity from "../components/ProductQuantity.tsx";
+import type {Product} from "../models/product.ts";
 
 interface ProductProps {
     product: Product
